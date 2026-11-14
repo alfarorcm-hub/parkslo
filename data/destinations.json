@@ -1,0 +1,12 @@
+[
+  { "id": "firestone-grill", "name": "Firestone Grill", "lat": 35.28001, "lng": -120.66298 },
+  { "id": "fremont-theater", "name": "Fremont Theater", "lat": 35.28091, "lng": -120.66257 },
+  { "id": "mission-slo", "name": "Mission San Luis Obispo de Tolosa", "lat": 35.27968, "lng": -120.66248 },
+  { "id": "mission-plaza", "name": "Mission Plaza", "lat": 35.27953, "lng": -120.66172 },
+  { "id": "slo-brew", "name": "SLO Brew", "lat": 35.27972, "lng": -120.66098 },
+  { "id": "farmers-market", "name": "Farmers Market (Higuera & Chorro)", "lat": 35.28071, "lng": -120.66389 },
+  { "id": "barnes-noble", "name": "Barnes & Noble (Higuera)", "lat": 35.28163, "lng": -120.66521 },
+  { "id": "granada-hotel", "name": "Granada Hotel", "lat": 35.27932, "lng": -120.66041 },
+  { "id": "ox-anchor", "name": "Ox + Anchor", "lat": 35.27991, "lng": -120.66187 },
+  { "id": "bubblegum-alley", "name": "Bubblegum Alley", "lat": 35.27887, "lng": -120.65986 }
+]

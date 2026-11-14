@@ -1,0 +1,226 @@
+[
+  {
+    "id": "garage-palm",
+    "name": "Palm Street Garage",
+    "kind": "garage",
+    "lat": 35.28021,
+    "lng": -120.66481,
+    "rules": [
+      { "days": [0, 1, 2, 3, 4, 5, 6], "start": "07:00", "end": "21:00", "pricePerHour": 1.5, "maxMinutes": null }
+    ],
+    "notes": "Covered garage, in/out privileges. Sample hours/pricing only.",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "garage-marsh",
+    "name": "Marsh Street Garage",
+    "kind": "garage",
+    "lat": 35.27814,
+    "lng": -120.66134,
+    "rules": [
+      { "days": [0, 1, 2, 3, 4, 5, 6], "start": "07:00", "end": "21:00", "pricePerHour": 1.5, "maxMinutes": null }
+    ],
+    "notes": "Covered garage near Marsh St. Sample hours/pricing only.",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "garage-court",
+    "name": "Court Street Garage",
+    "kind": "garage",
+    "lat": 35.28091,
+    "lng": -120.66003,
+    "rules": [
+      { "days": [0, 1, 2, 3, 4, 5, 6], "start": "07:00", "end": "21:00", "pricePerHour": 1.5, "maxMinutes": null }
+    ],
+    "notes": "Covered garage near Court St shops. Sample hours/pricing only.",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "lot-2-palm-morro",
+    "name": "Lot 2 - Palm & Morro",
+    "kind": "lot",
+    "lat": 35.28003,
+    "lng": -120.66321,
+    "rules": [
+      { "days": [1, 2, 3, 4, 5, 6], "start": "09:00", "end": "18:00", "pricePerHour": 1.5, "maxMinutes": null }
+    ],
+    "notes": "Open surface lot. Free evenings and Sundays (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "lot-4-higuera-nipomo",
+    "name": "Lot 4 - Higuera & Nipomo",
+    "kind": "lot",
+    "lat": 35.27782,
+    "lng": -120.65781,
+    "rules": [
+      { "days": [1, 2, 3, 4, 5, 6], "start": "09:00", "end": "18:00", "pricePerHour": 1.5, "maxMinutes": null }
+    ],
+    "notes": "Open surface lot near Nipomo St. Free evenings and Sundays (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "lot-9-marsh-nipomo",
+    "name": "Lot 9 - Marsh & Nipomo",
+    "kind": "lot",
+    "lat": 35.27795,
+    "lng": -120.65902,
+    "rules": [
+      { "days": [1, 2, 3, 4, 5, 6], "start": "09:00", "end": "18:00", "pricePerHour": 1.5, "maxMinutes": null }
+    ],
+    "notes": "Open surface lot. Free evenings and Sundays (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "street-higuera-800",
+    "name": "Higuera St - 800 Block",
+    "kind": "street",
+    "lat": 35.28121,
+    "lng": -120.66601,
+    "rules": [
+      { "days": [1, 2, 3, 4, 5, 6], "start": "09:00", "end": "18:00", "pricePerHour": 1.5, "maxMinutes": 120 }
+    ],
+    "notes": "Metered street parking, 2-hr limit while metered (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "street-higuera-1000",
+    "name": "Higuera St - 1000 Block",
+    "kind": "street",
+    "lat": 35.27991,
+    "lng": -120.66278,
+    "rules": [
+      { "days": [1, 2, 3, 4, 5, 6], "start": "09:00", "end": "18:00", "pricePerHour": 1.5, "maxMinutes": 120 }
+    ],
+    "notes": "Metered street parking near Firestone Grill, 2-hr limit while metered (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "street-monterey-900",
+    "name": "Monterey St - 900 Block",
+    "kind": "street",
+    "lat": 35.28081,
+    "lng": -120.66182,
+    "rules": [
+      { "days": [1, 2, 3, 4, 5, 6], "start": "09:00", "end": "18:00", "pricePerHour": 1.5, "maxMinutes": 120 }
+    ],
+    "notes": "Metered street parking near Fremont Theater, 2-hr limit while metered (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "street-marsh-700",
+    "name": "Marsh St - 700 Block",
+    "kind": "street",
+    "lat": 35.27932,
+    "lng": -120.66701,
+    "rules": [
+      { "days": [1, 2, 3, 4, 5, 6], "start": "09:00", "end": "18:00", "pricePerHour": 1.5, "maxMinutes": 120 }
+    ],
+    "notes": "Metered street parking, 2-hr limit while metered (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "street-chorro-800",
+    "name": "Chorro St - 800 Block",
+    "kind": "street",
+    "lat": 35.28152,
+    "lng": -120.66423,
+    "rules": [
+      { "days": [1, 2, 3, 4, 5, 6], "start": "09:00", "end": "18:00", "pricePerHour": 1.5, "maxMinutes": 120 }
+    ],
+    "notes": "Metered street parking near Barnes & Noble, 2-hr limit while metered (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "accessible-mission-plaza",
+    "name": "Mission Plaza Accessible Spaces",
+    "kind": "accessible",
+    "lat": 35.27961,
+    "lng": -120.66191,
+    "rules": [
+      { "days": [1, 2, 3, 4, 5, 6], "start": "09:00", "end": "18:00", "pricePerHour": 0, "maxMinutes": null }
+    ],
+    "notes": "Valid disabled placard/plate required. Free at metered hours (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "accessible-higuera-900",
+    "name": "Higuera St Accessible Spaces (900 Block)",
+    "kind": "accessible",
+    "lat": 35.28052,
+    "lng": -120.66253,
+    "rules": [
+      { "days": [1, 2, 3, 4, 5, 6], "start": "09:00", "end": "18:00", "pricePerHour": 0, "maxMinutes": null }
+    ],
+    "notes": "Valid disabled placard/plate required. Free at metered hours (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "loading-higuera-1000",
+    "name": "Higuera St Passenger Loading (1000 Block)",
+    "kind": "loading",
+    "lat": 35.28012,
+    "lng": -120.66312,
+    "rules": [
+      { "days": [0, 1, 2, 3, 4, 5, 6], "start": "00:00", "end": "23:59", "pricePerHour": 0, "maxMinutes": 5 }
+    ],
+    "notes": "White curb - passenger loading/unloading only, 5-min limit, driver must stay with vehicle (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "loading-monterey-900",
+    "name": "Monterey St Passenger Loading (900 Block)",
+    "kind": "loading",
+    "lat": 35.28096,
+    "lng": -120.66241,
+    "rules": [
+      { "days": [0, 1, 2, 3, 4, 5, 6], "start": "00:00", "end": "23:59", "pricePerHour": 0, "maxMinutes": 5 }
+    ],
+    "notes": "White curb - passenger loading/unloading only, 5-min limit, near Fremont Theater (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  },
+  {
+    "id": "motorcycle-palm",
+    "name": "Palm St Motorcycle Meters",
+    "kind": "motorcycle",
+    "lat": 35.27985,
+    "lng": -120.66502,
+    "rules": [
+      { "days": [1, 2, 3, 4, 5, 6], "start": "09:00", "end": "18:00", "pricePerHour": 0.75, "maxMinutes": null }
+    ],
+    "notes": "Motorcycle-only metered stalls, discounted rate (sample).",
+    "source": "SAMPLE - replace with city data",
+    "verified": false,
+    "verifiedOn": null
+  }
+]
