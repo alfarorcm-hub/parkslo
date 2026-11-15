@@ -11,6 +11,14 @@ const DEFAULT_ZOOM = 16;
 const WALK_SPEED_METERS_PER_MIN = 80;
 const DETOUR_FACTOR = 1.3;
 
+// CARTO requires a free API key for basemap tiles as of Sep 2026. Get one at
+// carto.com/basemaps/apikey and set NEXT_PUBLIC_CARTO_API_KEY. Falls back to
+// the legacy keyless URL (now unreliable) if unset, rather than crashing.
+const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY;
+const TILE_URL = CARTO_API_KEY
+  ? `https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`
+  : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+
 function walkMinutesToMeters(minutes: number): number {
   return (minutes * WALK_SPEED_METERS_PER_MIN) / DETOUR_FACTOR;
 }
@@ -61,7 +69,7 @@ export default function MapView({
       attributionControl={true}
     >
       <TileLayer
-        url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+        url={TILE_URL}
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
         maxZoom={19}
       />
