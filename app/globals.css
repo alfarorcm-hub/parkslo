@@ -181,6 +181,13 @@
   z-index: 0;
 }
 
+/* Mutes the default OSM tile palette (Google-Maps-like) so colored pins,
+   the walk-radius circle, and the path line stay legible. Scoped to the
+   tile layer only — markers/lines/popups render in their own panes. */
+.parkslo-tiles {
+  filter: grayscale(0.6) brightness(1.05) contrast(0.9);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -118,13 +118,13 @@ export default function Home() {
         />
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-[500] flex flex-col gap-2 p-3 sm:max-w-md">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-[1000] flex flex-col gap-2 p-3 sm:max-w-[720px]">
         <TopBar
           showTagline={!hasSearched}
           onSelectDestination={handleSelectDestination}
           onHelp={() => setCurbSheetOpen(true)}
         />
-        {destination && <FilterBar filters={filters} onChange={setFilters} />}
+        <FilterBar filters={filters} onChange={setFilters} />
       </div>
 
       <div

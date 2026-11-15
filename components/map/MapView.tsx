@@ -2,6 +2,7 @@
 
 import { Fragment, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Circle, Polyline, Popup, useMap } from "react-leaflet";
+import { tileLayerConfig } from "@/lib/providers/tiles";
 import { statusKindFor, status, brand } from "@/lib/theme";
 import type { Destination, RankedSpot, UnknownSpot } from "@/lib/types";
 import { destinationIcon, numberedSpotIcon, unknownSpotIcon } from "./icons";
@@ -10,14 +11,6 @@ const SLO_CENTER: [number, number] = [35.28, -120.663];
 const DEFAULT_ZOOM = 16;
 const WALK_SPEED_METERS_PER_MIN = 80;
 const DETOUR_FACTOR = 1.3;
-
-// CARTO requires a free API key for basemap tiles as of Sep 2026. Get one at
-// carto.com/basemaps/apikey and set NEXT_PUBLIC_CARTO_API_KEY. Falls back to
-// the legacy keyless URL (now unreliable) if unset, rather than crashing.
-const CARTO_API_KEY = process.env.NEXT_PUBLIC_CARTO_API_KEY;
-const TILE_URL = CARTO_API_KEY
-  ? `https://basemaps.cartocdn.com/rastertiles/light_all/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`
-  : "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
 
 function walkMinutesToMeters(minutes: number): number {
   return (minutes * WALK_SPEED_METERS_PER_MIN) / DETOUR_FACTOR;
@@ -69,9 +62,10 @@ export default function MapView({
       attributionControl={true}
     >
       <TileLayer
-        url={TILE_URL}
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        maxZoom={19}
+        url={tileLayerConfig.url}
+        attribution={tileLayerConfig.attribution}
+        maxZoom={tileLayerConfig.maxZoom}
+        className="parkslo-tiles"
       />
 
       {destPos && <Recenter position={destPos} />}

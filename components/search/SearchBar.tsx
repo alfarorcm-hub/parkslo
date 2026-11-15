@@ -56,30 +56,28 @@ export function SearchBar({
   const showSuggestions = open && query.trim().length >= 2;
 
   return (
-    <div ref={containerRef} className="relative flex-1 min-w-0">
+    <div ref={containerRef} className="relative w-full sm:min-w-[280px] sm:flex-1">
       <form
-        className="flex items-center gap-2"
+        className="relative w-full"
         onSubmit={(e) => {
           e.preventDefault();
           if (suggestions[0]) choose(suggestions[0]);
         }}
       >
-        <div className="relative flex-1 min-w-0">
-          <MapPin className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate" />
-          <Input
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onFocus={() => setOpen(true)}
-            placeholder="Search any address in SLO…"
-            className="h-11 rounded-xl border-border bg-mist pl-9 text-sm"
-            aria-label="Search address or place"
-          />
-        </div>
+        <MapPin className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate" />
+        <Input
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setOpen(true)}
+          placeholder="Search an address or place in SLO"
+          className="h-11 w-full rounded-xl border-border bg-mist pl-9 pr-11 text-sm"
+          aria-label="Search address or place"
+        />
         <Button
           type="submit"
           size="icon-lg"
           aria-label="Search"
-          className="h-11 w-11 shrink-0 rounded-xl bg-mint text-navy hover:bg-mint/80"
+          className="absolute right-1 top-1/2 h-9 w-9 -translate-y-1/2 rounded-lg bg-mint text-navy hover:bg-mint/80"
         >
           {loading ? <Loader2 className="size-4 animate-spin" /> : <Search className="size-4" />}
         </Button>
