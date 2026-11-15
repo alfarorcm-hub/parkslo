@@ -3,6 +3,7 @@ import {
   DoorOpen,
   ParkingMeter,
   SquareParking,
+  Timer,
   Warehouse,
   type LucideIcon,
 } from "lucide-react";
@@ -14,6 +15,7 @@ const KIND_ICONS: Record<SpotKind, LucideIcon> = {
   lot: SquareParking,
   street: ParkingMeter,
   loading: DoorOpen,
+  green: Timer,
   accessible: Accessibility,
   motorcycle: Motorbike,
 };
@@ -23,6 +25,7 @@ export const KIND_LABELS: Record<SpotKind, string> = {
   lot: "Lot",
   street: "Street",
   loading: "Loading zone",
+  green: "Short-term",
   accessible: "Accessible",
   motorcycle: "Motorcycle",
 };

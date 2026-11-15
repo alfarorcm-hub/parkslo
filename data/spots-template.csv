@@ -1,0 +1,4 @@
+id,name,kind,lat,lng,days,start,end,price_per_hour,max_minutes,accessible,loading,motorcycle,notes,source,verified_on
+example-garage-1,Example Garage,garage,35.2800,-120.6630,1-6,07:00,21:00,1.5,,no,no,no,"Covered garage, in/out privileges",City of SLO,
+example-street-1,Example Street Block,street,35.2805,-120.6625,1-6,09:00,18:00,1.5,120,no,no,no,"Metered, 2-hr limit while metered",City of SLO,
+example-accessible-1,Example Accessible Spaces,accessible,35.2795,-120.6620,1-6,09:00,18:00,0,,yes,no,no,"Valid disabled placard/plate required",City of SLO,

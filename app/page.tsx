@@ -1,122 +1,165 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Accessibility, DoorOpen, Search, SquareParking } from "lucide-react";
-import { Motorbike } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { ArrivalEditor, type ArrivalMode } from "@/components/parking/arrival-editor";
-import { ChipGroup, type ChipOption } from "@/components/parking/chip-group";
-import { DestinationCombobox } from "@/components/parking/destination-combobox";
-import { destinations } from "@/lib/data";
-import { encodeSearchParams } from "@/lib/query";
-import type { MaxWalk, TripType } from "@/lib/types";
+import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
+import { CurbColorsSheet } from "@/components/CurbColorsSheet";
+import { FilterBar } from "@/components/filters/FilterBar";
+import { LegendCard } from "@/components/LegendCard";
+import { MapSkeleton } from "@/components/map/MapSkeleton";
+import { ResultsPanel } from "@/components/results/ResultsPanel";
+import { SpotDetailSheet } from "@/components/SpotDetailSheet";
+import { TopBar } from "@/components/TopBar";
+import { defaultNearbyParkingProvider } from "@/lib/providers/osm-parking-provider";
+import { haversineMeters, rank, walkMinutes } from "@/lib/rules";
+import type { Destination, Filters, RankResult, Spot, UnknownSpot } from "@/lib/types";
+import type { SpotsSource } from "@/app/api/spots/route";
+import { cn } from "@/lib/utils";
 
-const TRIP_OPTIONS: ChipOption<TripType>[] = [
-  { value: "park", label: "Park", icon: SquareParking },
-  { value: "pickup", label: "Pickup", icon: DoorOpen },
-  { value: "accessible", label: "Accessible", icon: Accessibility },
-  { value: "motorcycle", label: "Motorcycle", icon: Motorbike },
-];
+const MapView = dynamic(() => import("@/components/map/MapView"), {
+  ssr: false,
+  loading: () => <MapSkeleton />,
+});
 
-const WALK_OPTIONS: ChipOption<MaxWalk>[] = [
-  { value: 3, label: "3 min" },
-  { value: 5, label: "5 min" },
-  { value: 10, label: "10 min" },
-  { value: 15, label: "15 min" },
-];
+const DEDUP_RADIUS_METERS = 60;
+const MIN_KNOWN_RESULTS_FOR_OSM = 3;
 
-function nowAsTimeString(): string {
-  const now = new Date();
-  return `${now.getHours().toString().padStart(2, "0")}:${now
-    .getMinutes()
-    .toString()
-    .padStart(2, "0")}`;
+function defaultFilters(): Filters {
+  return {
+    specials: [],
+    maxWalk: 10,
+    freeOnly: false,
+    arrival: new Date(),
+    stayMinutes: 120,
+    hasPlacard: false,
+  };
 }
 
 export default function Home() {
-  const router = useRouter();
+  const [spots, setSpots] = useState<Spot[]>([]);
+  const [spotsSource, setSpotsSource] = useState<SpotsSource>("bundled-csv");
+  const [spotsLoading, setSpotsLoading] = useState(true);
 
-  const [destId, setDestId] = useState(destinations[0].id);
-  const [tripType, setTripType] = useState<TripType>("park");
-  const [maxWalk, setMaxWalk] = useState<MaxWalk>(5);
-  const [freeOnly, setFreeOnly] = useState(false);
-  const [arrivalMode, setArrivalMode] = useState<ArrivalMode>("now");
-  const [customTime, setCustomTime] = useState(nowAsTimeString());
-  const [stayMinutes, setStayMinutes] = useState(120);
+  const [destination, setDestination] = useState<Destination | null>(null);
+  const [filters, setFilters] = useState<Filters>(defaultFilters());
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [detailOpen, setDetailOpen] = useState(false);
+  const [curbSheetOpen, setCurbSheetOpen] = useState(false);
+  const [hasSearched, setHasSearched] = useState(false);
+  const [rawUnknownSpots, setRawUnknownSpots] = useState<UnknownSpot[]>([]);
 
-  function handleFindParking() {
-    const arrival = new Date();
-    if (arrivalMode === "custom") {
-      const [h, m] = customTime.split(":").map(Number);
-      arrival.setHours(h, m, 0, 0);
-    }
+  useEffect(() => {
+    fetch("/api/spots")
+      .then((r) => r.json())
+      .then((data: { spots: Spot[]; source: SpotsSource }) => {
+        setSpots(data.spots);
+        setSpotsSource(data.source);
+      })
+      .catch(() => {})
+      .finally(() => setSpotsLoading(false));
+  }, []);
 
-    const params = encodeSearchParams({
-      destId,
-      filters: { tripType, maxWalk, freeOnly, arrival, stayMinutes },
+  const result: RankResult | null = useMemo(() => {
+    if (!destination || spots.length === 0) return null;
+    return rank(spots, destination, filters);
+  }, [spots, destination, filters]);
+
+  const knownCount = result ? result.top.length + result.more.length : 0;
+
+  const needsOsmFill = !!destination && knownCount < MIN_KNOWN_RESULTS_FOR_OSM;
+
+  // Fill gaps with nearby OSM parking of unknown rules when we're thin on data.
+  useEffect(() => {
+    if (!needsOsmFill || !destination) return;
+    let cancelled = false;
+    defaultNearbyParkingProvider.nearby(destination).then((osmSpots) => {
+      if (!cancelled) setRawUnknownSpots(osmSpots);
     });
+    return () => {
+      cancelled = true;
+    };
+  }, [needsOsmFill, destination]);
 
-    router.push(`/results?${params.toString()}`);
+  const unknownSpots = useMemo(() => {
+    if (!destination || !needsOsmFill) return [];
+    return rawUnknownSpots
+      .filter(
+        (osm) =>
+          !spots.some((s) => haversineMeters(osm.lat, osm.lng, s.lat, s.lng) < DEDUP_RADIUS_METERS),
+      )
+      .map((osm) => ({ spot: osm, walkMinutes: walkMinutes(destination, osm) }))
+      .filter((u) => u.walkMinutes <= filters.maxWalk);
+  }, [rawUnknownSpots, spots, destination, filters.maxWalk, needsOsmFill]);
+
+  function handleSelectDestination(dest: Destination) {
+    setDestination(dest);
+    setHasSearched(true);
+    setSelectedId(null);
   }
 
+  function handleSelectSpot(id: string) {
+    setSelectedId(id);
+    setDetailOpen(true);
+  }
+
+  const allResults = result ? [...result.top, ...result.more] : [];
+  const selectedRanked = allResults.find((r) => r.spot.id === selectedId) ?? null;
+  const selectedUnknown = unknownSpots.find((u) => u.spot.id === selectedId) ?? null;
+
   return (
-    <main className="mx-auto flex min-h-full w-full max-w-md flex-1 flex-col gap-6 px-4 py-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">
-          Where are you going?
-        </h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Legal parking near downtown San Luis Obispo.
-        </p>
+    <main className="relative h-dvh w-full overflow-hidden bg-mist">
+      <div className="absolute inset-0">
+        <MapView
+          destination={destination}
+          results={allResults}
+          unknownSpots={unknownSpots.map((u) => u.spot)}
+          selectedId={selectedId}
+          onSelect={handleSelectSpot}
+          maxWalk={filters.maxWalk}
+        />
       </div>
 
-      <DestinationCombobox value={destId} onChange={setDestId} />
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-[500] flex flex-col gap-2 p-3 sm:max-w-md">
+        <TopBar
+          showTagline={!hasSearched}
+          onSelectDestination={handleSelectDestination}
+          onHelp={() => setCurbSheetOpen(true)}
+        />
+        {destination && <FilterBar filters={filters} onChange={setFilters} />}
+      </div>
 
-      <section className="flex flex-col gap-2">
-        <Label className="text-xs font-medium text-muted-foreground">
-          Trip type
-        </Label>
-        <ChipGroup options={TRIP_OPTIONS} value={tripType} onChange={setTripType} />
-      </section>
-
-      <section className="flex flex-col gap-2">
-        <Label className="text-xs font-medium text-muted-foreground">
-          Walk time
-        </Label>
-        <ChipGroup options={WALK_OPTIONS} value={maxWalk} onChange={setMaxWalk} />
-      </section>
-
-      <section className="flex items-center justify-between rounded-lg border border-border px-3 py-2.5">
-        <Label htmlFor="free-only" className="text-sm font-normal">
-          Free only
-        </Label>
-        <Switch id="free-only" checked={freeOnly} onCheckedChange={setFreeOnly} />
-      </section>
-
-      <ArrivalEditor
-        arrivalMode={arrivalMode}
-        onArrivalModeChange={setArrivalMode}
-        customTime={customTime}
-        onCustomTimeChange={setCustomTime}
-        stayMinutes={stayMinutes}
-        onStayMinutesChange={setStayMinutes}
-      />
-
-      <Button
-        size="lg"
-        className="mt-2 h-12 w-full gap-2 text-base"
-        onClick={handleFindParking}
+      <div
+        className={cn(
+          "pointer-events-none absolute bottom-3 left-3 z-[500]",
+          destination && "max-sm:hidden",
+        )}
       >
-        <Search className="size-4" />
-        Find parking
-      </Button>
+        <LegendCard />
+      </div>
 
-      <p className="text-center text-xs text-muted-foreground">
-        Sample data for demo purposes — not verified city parking data.
-      </p>
+      {destination && (
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[500] sm:inset-x-auto sm:bottom-3 sm:left-3 sm:top-36 sm:w-[380px]">
+          <ResultsPanel
+            destinationName={destination.name}
+            loading={spotsLoading}
+            result={result}
+            unknownSpots={unknownSpots}
+            selectedId={selectedId}
+            onSelect={handleSelectSpot}
+            widenedToFreeOnly={filters.freeOnly ? (result?.widenedTo ?? null) : null}
+            requestedMaxWalk={filters.maxWalk}
+            onTryWiderWalk={(m) => setFilters((f) => ({ ...f, maxWalk: m }))}
+            showSampleFooter={spotsSource === "sample"}
+          />
+        </div>
+      )}
+
+      <SpotDetailSheet
+        ranked={selectedRanked}
+        unknown={selectedUnknown}
+        open={detailOpen}
+        onOpenChange={setDetailOpen}
+      />
+      <CurbColorsSheet open={curbSheetOpen} onOpenChange={setCurbSheetOpen} />
     </main>
   );
 }
